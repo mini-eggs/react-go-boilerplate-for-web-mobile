@@ -46,5 +46,9 @@ func CreateUser(w http.ResponseWriter, r *http.Request, p goat.Params) {
 		StatusCode: 1,
 		Status:     true,
 		Token:      token,
+		Data: map[string]interface{}{
+			"Name":  dbUser.Name,
+			"Email": dbUser.Email,
+		},
 	})
 }

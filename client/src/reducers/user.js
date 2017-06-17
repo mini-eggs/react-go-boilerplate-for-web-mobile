@@ -23,8 +23,8 @@ export function LoginRequest(email, password) {
 
   return async function(dispatch) {
     try {
-      const { user, token } = await post(url, data);
-      dispatch(updateUser(user, token));
+      const { Data, Token } = await post(url, data);
+      dispatch(updateUser(Data, Token));
     } catch (err) {
       console.log(err);
     }

@@ -1,13 +1,13 @@
 package delivery
 
 import (
+	"boilerplate/server/domain"
+	"boilerplate/server/infrastructure"
 	"bytes"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"boilerplate/server/domain"
-	"boilerplate/server/infrastructure"
 	"strconv"
 	"testing"
 	"time"
@@ -32,11 +32,13 @@ func TestCreateUser(t *testing.T) {
 		milli     = time.Now().UnixNano() / int64(time.Millisecond)
 		aPassword = "HereWeGo"
 		tokenKey  = infrastructure.Environment("tokenKey", "HereWeGo")
+		name      = "evan"
+		email     = strconv.FormatInt(milli, 10) + "@gmail.com"
 	)
 
 	formData := url.Values{}
-	formData.Set("name", "evan")
-	formData.Set("email", strconv.FormatInt(milli, 10)+"@gmail.com")
+	formData.Set("name", name)
+	formData.Set("email", email)
 	formData.Set("password", aPassword)
 
 	client := &http.Client{}
@@ -70,6 +72,11 @@ func TestCreateUser(t *testing.T) {
 
 	if data.Status == false {
 		t.Error(data.Message)
+		return
+	}
+
+	if data.Data["Name"] != name || data.Data["Email"] != email {
+		t.Error("Return user not the same as create user")
 		return
 	}
 

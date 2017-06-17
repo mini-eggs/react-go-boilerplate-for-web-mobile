@@ -12,6 +12,7 @@ type (
 		Message    string
 		StatusCode int
 		Token      string
+		Data       map[string]interface{}
 	}
 )
 

@@ -6,7 +6,7 @@ export function post(url, params) {
   return new Promise(async function(resolve, reject) {
     try {
       const request = fetch(`${API}${url}`, data);
-      const response = await request.jons();
+      const response = await request.json();
       resolve(response);
     } catch (err) {
       reject(err);
