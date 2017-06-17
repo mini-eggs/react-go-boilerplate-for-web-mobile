@@ -1,0 +1,41 @@
+{
+  "name": "client",
+  "version": "0.1.0",
+  "private": true,
+  "devDependencies": {
+    "react-native-scripts": "0.0.31",
+    "jest-expo": "~1.0.1",
+    "react-test-renderer": "16.0.0-alpha.6",
+    "react-scripts": "git://github.com/mini-eggs/react-scripts.git"
+  },
+  "main": "./node_modules/react-native-scripts/build/bin/crna-entry.js",
+  "scripts": {
+    "start": "react-native-scripts start",
+    "eject": "react-native-scripts eject",
+    "android": "react-native-scripts android",
+    "ios": "react-native-scripts ios",
+    "web": "react-scripts start",
+    "web-build": "react-scripts build",
+    "test": "node node_modules/jest/bin/jest.js --watch"
+  },
+  "jest": {
+    "preset": "jest-expo"
+  },
+  "dependencies": {
+    "expo": "^17.0.0",
+    "history": "^4.6.2",
+    "react": "16.0.0-alpha.6",
+    "react-dom": "16.0.0-alpha.6",
+    "react-native": "^0.44.0",
+    "react-native-web": "0.0.103",
+    "react-navigation": "^1.0.0-beta.11",
+    "react-redux": "^5.0.5",
+    "react-router": "^4.1.1",
+    "react-router-dom": "^4.1.1",
+    "react-router-redux": "^4.0.8",
+    "redux": "^3.6.0",
+    "redux-offline": "^2.0.0",
+    "redux-thunk": "^2.2.0",
+    "styled-components": "^2.1.0"
+  }
+}

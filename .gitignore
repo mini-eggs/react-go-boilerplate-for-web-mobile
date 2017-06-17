@@ -1,0 +1,5 @@
+.vscode
+.DS_Store
+boilerplate.exe
+.env
+client/node_modules
