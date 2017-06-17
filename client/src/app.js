@@ -12,6 +12,7 @@ import { StackNavigator, DrawerNavigator } from "react-navigation";
  */
 import Reducers from "./reducers/";
 import Home from "./scenes/home";
+import Login from "./scenes/login";
 import Account from "./scenes/account";
 import Drawer from "./components/drawer";
 import DrawerButton from "./components/drawerButton";
@@ -23,6 +24,16 @@ const Router = StackNavigator({
   home: {
     screen: Home,
     navigationOptions: { title: "Home", headerLeft: <DrawerButton /> }
+  },
+  login: {
+    screen: Login,
+    navigationOptions: {
+      headerStyle: {
+        backgroundColor: "#e8702a"
+      },
+      headerTintColor: "#fff",
+      headerBorderColor: "#fff"
+    }
   },
   account: {
     screen: Account,

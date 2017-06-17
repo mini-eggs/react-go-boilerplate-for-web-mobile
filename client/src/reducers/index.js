@@ -1,7 +1,5 @@
-function Bogus(state = {}) {
-  return state;
-}
+import User from "./user";
 
 export default {
-  Bogus
+  User
 };

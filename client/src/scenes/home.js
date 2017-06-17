@@ -1,4 +1,5 @@
 import React from "react";
+import { StatusBar } from "react-native";
 import Styled from "styled-components/native";
 
 import Message from "../components/message";
@@ -18,9 +19,13 @@ const Text = Styled.Text`
 export default function() {
   return (
     <Container>
+      <StatusBar barStyle="dark-content" />
       <Message message="Home" />
       <Link to="account">
         <Text>Account page</Text>
+      </Link>
+      <Link to="login">
+        <Text>Login page</Text>
       </Link>
     </Container>
   );
