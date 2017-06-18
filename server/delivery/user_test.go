@@ -15,10 +15,11 @@ import (
 	"github.com/bahlo/goat"
 )
 
-func TestCreateUser(t *testing.T) {
+func TestCreateUserSignIn(t *testing.T) {
 	go func() {
 		router := goat.New()
 		router.Post("/user/create", "/user/create", CreateUser)
+		router.Post("/user/signin", "/user/signin", SignIn)
 		routerErr := router.Run(":5002")
 		if routerErr != nil {
 			t.Error(routerErr)
@@ -35,6 +36,8 @@ func TestCreateUser(t *testing.T) {
 		name      = "evan"
 		email     = strconv.FormatInt(milli, 10) + "@gmail.com"
 	)
+
+	// Create user
 
 	formData := url.Values{}
 	formData.Set("name", name)
@@ -91,4 +94,59 @@ func TestCreateUser(t *testing.T) {
 		return
 	}
 
+	// Sign in
+
+	signInFormData := url.Values{}
+	signInFormData.Set("email", email)
+	signInFormData.Set("password", aPassword)
+
+	signInClient := &http.Client{}
+	signInReq, signInReqErr := http.NewRequest("POST", "http://127.0.0.1:5002/user/signin", bytes.NewBufferString(signInFormData.Encode()))
+	signInReq.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	signInReq.Header.Add("Content-Length", strconv.Itoa(len(signInFormData.Encode())))
+	if signInReqErr != nil {
+		t.Error(signInReqErr)
+		return
+	}
+
+	signInResp, signInRespErr := signInClient.Do(signInReq)
+	if signInRespErr != nil {
+		t.Error(respErr)
+		return
+	}
+
+	defer signInResp.Body.Close()
+	signInBody, signInBodyErr := ioutil.ReadAll(signInResp.Body)
+	if signInBodyErr != nil {
+		t.Error(bodyErr)
+		return
+	}
+
+	var signInData = new(response)
+	signInJSONErr := json.Unmarshal(signInBody, &signInData)
+	if signInJSONErr != nil {
+		t.Error(signInJSONErr)
+		return
+	}
+
+	if signInData.Status == false {
+		t.Error(signInData.Message)
+		return
+	}
+
+	if signInData.Data["Name"] != name || signInData.Data["Email"] != email {
+		t.Error("Return user not the same as sign in user")
+		return
+	}
+
+	signInTokenData, signInDecodeErr := domain.DecodeToken(signInData.Token, tokenKey)
+	if signInDecodeErr != nil {
+		t.Error(signInDecodeErr)
+		return
+	}
+
+	if len(signInTokenData["ID"].(string)) < 1 {
+		t.Error("Token does not have valid user ID")
+		return
+	}
 }

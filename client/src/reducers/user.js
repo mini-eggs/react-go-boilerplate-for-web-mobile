@@ -1,4 +1,4 @@
-import { API, post } from "../constants/";
+import { post } from "../constants/";
 
 const initialState = {
   user: false,

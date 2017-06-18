@@ -1,7 +1,9 @@
 import React from "react";
-import { View, StatusBar, Dimensions } from "react-native";
+import { View, StatusBar } from "react-native";
 import { connect } from "react-redux";
 import Styled from "styled-components/native";
+import spected from "spected";
+import { uniq } from "lodash";
 
 import { LoginRequest } from "../reducers/user";
 
@@ -114,7 +116,20 @@ function LoginUI(props) {
 /**
  * State
  */
-const initialState = { email: "Email", password: "Password" };
+const initialState = {
+  email: "Email",
+  password: "Password"
+};
+const validationSpec = {
+  email: [
+    [a => a !== "", "Must have email."],
+    [a => a !== initialState.email, "Must have email."]
+  ],
+  password: [
+    [a => a !== "", "Must have password."],
+    [a => a !== initialState.password, "Must have password."]
+  ]
+};
 class LoginComponent extends React.Component {
   state = initialState;
 
@@ -151,18 +166,21 @@ class LoginComponent extends React.Component {
   };
 
   handleComplete = () => {
-    const { email, password } = this.state;
+    const errors = [];
+    const status = spected(validationSpec, this.state);
 
-    if (
-      email === "" ||
-      email === initialState.email ||
-      password === "" ||
-      password === initialState.password
-    ) {
-      return;
+    for (const key in status) {
+      if (typeof status[key] !== "boolean") {
+        errors.push(status[key][0]);
+      }
     }
 
-    this.props.dispatch(LoginRequest(email, password));
+    if (errors.length > 0) {
+      alert(uniq(errors).join(" "));
+    } else {
+      const { email, password } = this.state;
+      this.props.dispatch(LoginRequest(email, password));
+    }
   };
 
   render() {

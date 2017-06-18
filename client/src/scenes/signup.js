@@ -1,7 +1,9 @@
 import React from "react";
-import { View, StatusBar, Dimensions } from "react-native";
+import { View, StatusBar } from "react-native";
 import { connect } from "react-redux";
 import Styled from "styled-components/native";
+import spected from "spected";
+import { uniq } from "lodash";
 
 import TriggerLink from "../components/triggerLink";
 import { SignupRequest } from "../reducers/user";
@@ -169,23 +171,38 @@ class SignupComponent extends React.Component {
   };
 
   handleComplete = () => {
-    const { name, email, password, vPassword } = this.state;
+    const validationSpec = {
+      name: [
+        [a => a !== "", "Must have name."],
+        [a => a !== initialState.name, "Must have name."]
+      ],
+      email: [
+        [a => a !== "", "Must have email."],
+        [a => a !== initialState.email, "Must have email."]
+      ],
+      password: [
+        [a => a !== "", "Must have password."],
+        [a => a !== initialState.password, "Must have password."],
+        [a => a === this.state.vPassword, "Passwords must match."]
+      ]
+    };
 
-    if (
-      name === "" ||
-      name === initialState.name ||
-      email === "" ||
-      email === initialState.email ||
-      password === "" ||
-      password === initialState.password ||
-      vPassword === "" ||
-      vPassword === initialState.vPassword ||
-      password !== vPassword
-    ) {
-      return;
+    const status = spected(validationSpec, this.state);
+
+    const errors = [];
+
+    for (const key in status) {
+      if (typeof status[key] !== "boolean") {
+        errors.push(status[key][0]);
+      }
     }
 
-    this.props.dispatch(SignupRequest(name, email, password));
+    if (errors.length > 0) {
+      alert(uniq(errors).join(" "));
+    } else {
+      const { name, email, password } = this.state;
+      this.props.dispatch(SignupRequest(name, email, password));
+    }
   };
 
   componentWillReceiveProps({ token }) {

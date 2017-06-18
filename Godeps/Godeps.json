@@ -1,0 +1,52 @@
+{
+	"ImportPath": "boilerplate",
+	"GoVersion": "go1.8",
+	"GodepVersion": "v79",
+	"Packages": [
+		"./..."
+	],
+	"Deps": [
+		{
+			"ImportPath": "github.com/bahlo/goat",
+			"Comment": "v1.0.7",
+			"Rev": "4de72452b8cfe7dc1dd9acabf3ca8d4d443dd1ad"
+		},
+		{
+			"ImportPath": "github.com/dgrijalva/jwt-go",
+			"Comment": "v3.0.0-20-ga539ee1",
+			"Rev": "a539ee1a749a2b895533f979515ac7e6e0f5b650"
+		},
+		{
+			"ImportPath": "github.com/go-sql-driver/mysql",
+			"Comment": "v1.3-21-ge3f0fdc",
+			"Rev": "e3f0fdcf52770a162d5a4540ddb8d9957ff456d1"
+		},
+		{
+			"ImportPath": "github.com/jinzhu/gorm",
+			"Comment": "v1.0-156-g9acaa33",
+			"Rev": "9acaa33324bbcc78239a1c913d4f1292c12177b9"
+		},
+		{
+			"ImportPath": "github.com/jinzhu/gorm/dialects/mysql",
+			"Comment": "v1.0-156-g9acaa33",
+			"Rev": "9acaa33324bbcc78239a1c913d4f1292c12177b9"
+		},
+		{
+			"ImportPath": "github.com/jinzhu/inflection",
+			"Rev": "1c35d901db3da928c72a72d8458480cc9ade058f"
+		},
+		{
+			"ImportPath": "github.com/julienschmidt/httprouter",
+			"Comment": "v1.1-51-g975b5c4",
+			"Rev": "975b5c4c7c21c0e3d2764200bf2aa8e34657ae6e"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/bcrypt",
+			"Rev": "e7ba82683099cae71475961448ab8f903ea77c26"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/blowfish",
+			"Rev": "e7ba82683099cae71475961448ab8f903ea77c26"
+		}
+	]
+}
