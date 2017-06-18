@@ -1,11 +1,17 @@
 export const API = "http://127.0.0.1:5000";
 
 export function post(url, params) {
-  const data = { method: "POST", body: JSON.stringify(params) };
+  const formData = new FormData();
+
+  for (const key in params) {
+    formData.append(key, params[key]);
+  }
+
+  const data = { method: "POST", body: formData };
 
   return new Promise(async function(resolve, reject) {
     try {
-      const request = fetch(`${API}${url}`, data);
+      const request = await fetch(`${API}${url}`, data);
       const response = await request.json();
       resolve(response);
     } catch (err) {

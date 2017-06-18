@@ -27,6 +27,9 @@ export default function() {
       <Link to="login">
         <Text>Login page</Text>
       </Link>
+      <Link to="signup">
+        <Text>Signup page</Text>
+      </Link>
     </Container>
   );
 }

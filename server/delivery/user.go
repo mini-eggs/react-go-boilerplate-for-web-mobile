@@ -11,6 +11,7 @@ import (
 
 // CreateUser - TODO
 func CreateUser(w http.ResponseWriter, r *http.Request, p goat.Params) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	var (
 		name     = r.FormValue("name")

@@ -31,6 +31,20 @@ export function LoginRequest(email, password) {
   };
 }
 
+export function SignupRequest(name, email, password) {
+  const url = "/user/create";
+  const data = { name, email, password };
+
+  return async function(dispatch) {
+    try {
+      const { Data, Token } = await post(url, data);
+      dispatch(updateUser(Data, Token));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+}
+
 export default function(state = initialState, { type, payload }) {
   switch (type) {
     case UPDATE_USER: {

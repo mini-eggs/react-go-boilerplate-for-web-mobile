@@ -12,7 +12,14 @@ const Container = Styled.View`
   flex: 1;
   background-color: #e8702a;
   justify-content: center;
-  align-items: center;
+  align-items: stretch;
+`;
+
+const Inner = Styled.ScrollView`
+  padding-top: 50;
+  flex: 1;
+  padding-left: 25;
+  padding-right: 25;
 `;
 
 const Title = Styled.Text`
@@ -24,12 +31,6 @@ const Title = Styled.Text`
 const SubTitle = Styled.Text`
   color: #fff;
   font-size: 18;
-`;
-
-const Inner = Styled.ScrollView`
-  width: ${Dimensions.get("window").width * 0.8}
-  padding-top: 50;
-  flex: 1;
 `;
 
 const Form = Styled.View`

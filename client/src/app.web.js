@@ -17,6 +17,8 @@ import { Route, Switch, Redirect } from "react-router";
 import Reducers from "./reducers/";
 import Home from "./scenes/home";
 import Account from "./scenes/account";
+import Login from "./scenes/login";
+import Signup from "./scenes/signup";
 
 /**
  * Configuration.
@@ -40,6 +42,8 @@ export default function app() {
           <Redirect exact path="/" to="/home" />
           <Route path="/home" exact={true} component={Home} />
           <Route path="/account" exact={true} component={Account} />
+          <Route path="/login" exact={true} component={Login} />
+          <Route path="/signup" exact={true} component={Signup} />
         </Switch>
       </HashRouter>
     </Provider>
@@ -47,9 +51,16 @@ export default function app() {
 }
 
 injectGlobal`
+
   body div#root > div {
     height: 100vh;
   }
+
+  * {
+    box-shadow: none !important;
+    outline: none !important;
+  }
+
 `;
 
 AppRegistry.registerComponent("app", () => app);
