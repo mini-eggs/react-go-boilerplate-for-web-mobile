@@ -18,7 +18,7 @@ function updateUser(user, token) {
 }
 
 export function LoginRequest(email, password) {
-  const url = "/user/login";
+  const url = "/user/signin";
   const data = { email, password };
 
   return async function(dispatch) {

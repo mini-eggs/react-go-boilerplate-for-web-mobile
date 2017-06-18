@@ -5,11 +5,16 @@ import Styled from "styled-components/native";
 import spected from "spected";
 import { uniq } from "lodash";
 
+import TriggerLink from "../components/triggerLink";
 import { LoginRequest } from "../reducers/user";
 
 /**
  * Styles
  */
+const FlexContainer = Styled.View`
+  flex: 1;
+`;
+
 const Container = Styled.View`
   flex: 1;
   background-color: #e8702a;
@@ -183,18 +188,28 @@ class LoginComponent extends React.Component {
     }
   };
 
+  componentWillReceiveProps({ token }) {
+    if (token && !this.props.token) {
+      alert("Login complete.");
+      this.setState(() => ({ triggerLink: true }));
+    }
+  }
+
   render() {
     return (
-      <LoginUI
-        {...this.state}
-        handleEmail={this.handleEmail}
-        handleEmailFocus={this.handleEmailFocus}
-        handleEmailBlur={this.handleEmailBlur}
-        handlePassword={this.handlePassword}
-        handlePasswordFocus={this.handlePasswordFocus}
-        handlePasswordBlur={this.handlePasswordBlur}
-        handleComplete={this.handleComplete}
-      />
+      <FlexContainer>
+        <LoginUI
+          {...this.state}
+          handleEmail={this.handleEmail}
+          handleEmailFocus={this.handleEmailFocus}
+          handleEmailBlur={this.handleEmailBlur}
+          handlePassword={this.handlePassword}
+          handlePasswordFocus={this.handlePasswordFocus}
+          handlePasswordBlur={this.handlePasswordBlur}
+          handleComplete={this.handleComplete}
+        />
+        <TriggerLink to="home" trigger={this.state.triggerLink} />
+      </FlexContainer>
     );
   }
 }
@@ -203,7 +218,9 @@ class LoginComponent extends React.Component {
  * Redux
  */
 function mapState(state) {
-  return {};
+  return {
+    token: state.User.token
+  };
 }
 
 export default connect(mapState, dispatch => ({ dispatch }))(LoginComponent);
