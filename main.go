@@ -10,7 +10,7 @@ import (
 // StartApplication - TODO
 func StartApplication() error {
 	router := goat.New()
-	port := infrastructure.Environment("port", "5000")
+	port := infrastructure.Environment("PORT", "5000")
 
 	router.Get("/", "/", delivery.Static)
 	router.Post("/user/create", "/user/create", delivery.CreateUser)
