@@ -7,74 +7,19 @@ import { uniq } from "lodash";
 import { compose, withHandlers, withState, lifecycle } from "recompose";
 import { LoginRequest } from "../reducers/user";
 import withNavigation from "../components/withNavigation";
-
-/**
- * Styles
- */
-const FlexContainer = Styled.View`
-  flex: 1;
-`;
-
-const Container = Styled.View`
-  flex: 1;
-  background-color: #e8702a;
-  justify-content: center;
-  align-items: stretch;
-`;
-
-const Inner = Styled.ScrollView`
-  padding-top: 50;
-  flex: 1;
-  padding-left: 25;
-  padding-right: 25;
-`;
-
-const Title = Styled.Text`
-  font-size: 64;
-  color: #fff;
-  margin-bottom: 10;
-`;
-
-const SubTitle = Styled.Text`
-  color: #fff;
-  font-size: 18;
-`;
-
-const Form = Styled.View`
-  background-color: #fff;
-  border-radius: 10;
-  margin-top: 30;
-  margin-bottom: 20;
-`;
-
-const Input = Styled.TextInput`
-  height: 50;
-  padding-left: 10;
-  padding-right: 10;
-`;
-
-const Divider = Styled.View`
-  min-height: 2;
-  background-color: rgba(0, 0, 0, 0.2);
-`;
-
-const Button = Styled.TouchableWithoutFeedback`
-`;
-
-const ButtonBackground = Styled.View`
-  background-color: #0c457d;
-  border-radius: 10;
-  padding-top: 15;
-  padding-right: 10;
-  padding-bottom: 15;
-  padding-left: 10;
-`;
-
-const ButtonText = Styled.Text`
-  color: #fff;
-  font-size: 18;
-  text-align: center;
-`;
+import {
+  FlexContainer,
+  Container,
+  Inner,
+  Title,
+  SubTitle,
+  Form,
+  Input,
+  Divider,
+  Button,
+  ButtonBackground,
+  ButtonText
+} from "../styles/form";
 
 /**
  * UI Component
@@ -113,36 +58,34 @@ function LoginUI(props) {
 /**
  * Validation
  */
-function handleComplete({ email, password, dispatch }) {
-  return () => {
-    const errors = [];
+function handleLogin({ email, password, dispatch }) {
+  const errors = [];
 
-    const status = spected(
-      {
-        email: [[a => a !== "", "Must have email."]],
-        password: [[a => a !== "", "Must have password."]]
-      },
-      { email, password }
-    );
+  const status = spected(
+    {
+      email: [[a => a !== "", "Must have email."]],
+      password: [[a => a !== "", "Must have password."]]
+    },
+    { email, password }
+  );
 
-    for (const key in status) {
-      if (typeof status[key] !== "boolean") {
-        errors.push(status[key][0]);
-      }
+  for (const key in status) {
+    if (typeof status[key] !== "boolean") {
+      errors.push(status[key][0]);
     }
+  }
 
-    if (errors.length > 0) {
-      alert(uniq(errors).join(" "));
-    } else {
-      dispatch(LoginRequest(email, password));
-    }
-  };
+  if (errors.length > 0) {
+    alert(uniq(errors).join(" "));
+  } else {
+    dispatch(LoginRequest(email, password));
+  }
 }
 
 /**
  * Lifecycles
  */
-function componentWillReceiveProps({ token, navigation }) {
+function checkToken({ token, navigation }) {
   if (token) {
     navigation.navigate("home");
   }
@@ -164,8 +107,8 @@ export default withNavigation(
     compose(
       withState("email", "setEmail", ""),
       withState("password", "setPassword", ""),
-      withHandlers({ handleComplete }),
-      lifecycle({ componentWillReceiveProps })
+      withHandlers({ handleComplete: state => () => handleLogin(state) }),
+      lifecycle({ componentWillReceiveProps: checkToken })
     )(LoginUI)
   )
 );
