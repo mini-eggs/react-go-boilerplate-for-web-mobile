@@ -4,9 +4,9 @@ import { connect } from "react-redux";
 import Styled from "styled-components/native";
 import spected from "spected";
 import { uniq } from "lodash";
-
-import TriggerLink from "../components/triggerLink";
+import { compose, withHandlers, withState, lifecycle } from "recompose";
 import { SignupRequest } from "../reducers/user";
+import withNavigation from "../components/withNavigation";
 
 /**
  * Styles
@@ -47,13 +47,7 @@ const Form = Styled.View`
   margin-bottom: 20;
 `;
 
-const EmailInput = Styled.TextInput`
-  height: 50;
-  padding-left: 10;
-  padding-right: 10;
-`;
-
-const PasswordInput = Styled.TextInput`
+const Input = Styled.TextInput`
   height: 50;
   padding-left: 10;
   padding-right: 10;
@@ -83,9 +77,9 @@ const ButtonText = Styled.Text`
 `;
 
 /**
- * UI
+ * UI Component
  */
-function LoginUI(props) {
+function SignupUI(props) {
   return (
     <Container>
       <StatusBar barStyle="light-content" />
@@ -93,32 +87,28 @@ function LoginUI(props) {
         <Title>Signup.</Title>
         <SubTitle>It only takes 30 seconds.</SubTitle>
         <Form>
-          <EmailInput
-            onChangeText={props.handleName}
-            onFocus={props.handleNameFocus}
-            onBlur={props.handleNameBlur}
+          <Input
+            onChangeText={props.setName}
+            placeholder="Name"
             value={props.name}
           />
           <Divider />
-          <EmailInput
-            onChangeText={props.handleEmail}
-            onFocus={props.handleEmailFocus}
-            onBlur={props.handleEmailBlur}
+          <Input
+            onChangeText={props.setEmail}
+            placeholder="Email"
             value={props.email}
           />
           <Divider />
-          <PasswordInput
-            onChangeText={props.handlePassword}
-            onFocus={props.handlePasswordFocus}
-            onBlur={props.handlePasswordBlur}
+          <Input
+            onChangeText={props.setPassword}
+            placeholder="Password"
             value={props.password}
           />
           <Divider />
-          <PasswordInput
-            onChangeText={props.handleVPassword}
-            onFocus={props.handleVPasswordFocus}
-            onBlur={props.handleVPasswordBlur}
-            value={props.vPassword}
+          <Input
+            onChangeText={props.setVerifyPassword}
+            placeholder="Verify Password"
+            value={props.verifyPassword}
           />
         </Form>
         <Button onPress={props.handleComplete}>
@@ -133,63 +123,23 @@ function LoginUI(props) {
 }
 
 /**
- * State
+ * Validation
  */
-const initialState = {
-  name: "Name",
-  email: "Email",
-  password: "Password",
-  vPassword: "Verify Password",
-  triggerLink: false
-};
-class SignupComponent extends React.Component {
-  state = Object.assign({}, initialState);
-
-  handleChange = type => text => {
-    this.setState(state => {
-      state[type] = text;
-      return state;
-    });
-  };
-
-  handleFocus = type => () => {
-    if (this.state[type] === initialState[type]) {
-      this.setState(state => {
-        state[type] = "";
-        return state;
-      });
-    }
-  };
-
-  handleBlur = type => () => {
-    if (this.state[type] === "") {
-      this.setState(state => {
-        state[type] = initialState[type];
-        return state;
-      });
-    }
-  };
-
-  handleComplete = () => {
-    const validationSpec = {
-      name: [
-        [a => a !== "", "Must have name."],
-        [a => a !== initialState.name, "Must have name."]
-      ],
-      email: [
-        [a => a !== "", "Must have email."],
-        [a => a !== initialState.email, "Must have email."]
-      ],
-      password: [
-        [a => a !== "", "Must have password."],
-        [a => a !== initialState.password, "Must have password."],
-        [a => a === this.state.vPassword, "Passwords must match."]
-      ]
-    };
-
-    const status = spected(validationSpec, this.state);
-
+function handleComplete({ name, email, password, verifyPassword, dispatch }) {
+  return () => {
     const errors = [];
+
+    const status = spected(
+      {
+        name: [[a => a !== "", "Must have name."]],
+        email: [[a => a !== "", "Must have email."]],
+        password: [
+          [a => a !== "", "Must have password."],
+          [a => a === verifyPassword, "Passwords must match."]
+        ]
+      },
+      { name, email, password }
+    );
 
     for (const key in status) {
       if (typeof status[key] !== "boolean") {
@@ -200,50 +150,40 @@ class SignupComponent extends React.Component {
     if (errors.length > 0) {
       alert(uniq(errors).join(" "));
     } else {
-      const { name, email, password } = this.state;
-      this.props.dispatch(SignupRequest(name, email, password));
+      dispatch(SignupRequest(name, email, password));
     }
   };
+}
 
-  componentWillReceiveProps({ token }) {
-    if (token && !this.props.token) {
-      alert("Signup complete.");
-      this.setState(() => ({ triggerLink: true }));
-    }
-  }
-
-  render() {
-    return (
-      <FlexContainer>
-        <LoginUI
-          {...this.state}
-          handleName={this.handleChange("name")}
-          handleNameFocus={this.handleFocus("name")}
-          handleNameBlur={this.handleBlur("name")}
-          handleEmail={this.handleChange("email")}
-          handleEmailFocus={this.handleFocus("email")}
-          handleEmailBlur={this.handleBlur("email")}
-          handlePassword={this.handleChange("password")}
-          handlePasswordFocus={this.handleFocus("password")}
-          handlePasswordBlur={this.handleBlur("password")}
-          handleVPassword={this.handleChange("vPassword")}
-          handleVPasswordFocus={this.handleFocus("vPassword")}
-          handleVPasswordBlur={this.handleBlur("vPassword")}
-          handleComplete={this.handleComplete}
-        />
-        <TriggerLink to="home" trigger={this.state.triggerLink} />
-      </FlexContainer>
-    );
+/**
+ * Lifecycles
+ */
+function componentWillReceiveProps({ token, navigation }) {
+  if (token) {
+    navigation.navigate("home");
   }
 }
 
 /**
- * Redux
+ * Props and state
  */
-function mapState(state) {
-  return {
-    token: state.User.token
-  };
+function mapState({ User }) {
+  return { token: User.token };
 }
 
-export default connect(mapState, dispatch => ({ dispatch }))(SignupComponent);
+function mapDispatch(dispatch) {
+  return { dispatch };
+}
+
+export default withNavigation(
+  connect(mapState, mapDispatch)(
+    compose(
+      withState("name", "setName", ""),
+      withState("email", "setEmail", ""),
+      withState("password", "setPassword", ""),
+      withState("verifyPassword", "setVerifyPassword", ""),
+      withHandlers({ handleComplete }),
+      lifecycle({ componentWillReceiveProps })
+    )(SignupUI)
+  )
+);

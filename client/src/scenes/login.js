@@ -4,9 +4,9 @@ import { connect } from "react-redux";
 import Styled from "styled-components/native";
 import spected from "spected";
 import { uniq } from "lodash";
-
-import TriggerLink from "../components/triggerLink";
+import { compose, withHandlers, withState, lifecycle } from "recompose";
 import { LoginRequest } from "../reducers/user";
+import withNavigation from "../components/withNavigation";
 
 /**
  * Styles
@@ -47,13 +47,7 @@ const Form = Styled.View`
   margin-bottom: 20;
 `;
 
-const EmailInput = Styled.TextInput`
-  height: 50;
-  padding-left: 10;
-  padding-right: 10;
-`;
-
-const PasswordInput = Styled.TextInput`
+const Input = Styled.TextInput`
   height: 50;
   padding-left: 10;
   padding-right: 10;
@@ -83,7 +77,7 @@ const ButtonText = Styled.Text`
 `;
 
 /**
- * UI
+ * UI Component
  */
 function LoginUI(props) {
   return (
@@ -93,17 +87,15 @@ function LoginUI(props) {
         <Title>Login.</Title>
         <SubTitle>It only takes 30 seconds.</SubTitle>
         <Form>
-          <EmailInput
-            onChangeText={props.handleEmail}
-            onFocus={props.handleEmailFocus}
-            onBlur={props.handleEmailBlur}
+          <Input
+            onChangeText={props.setEmail}
+            placeholder="Email"
             value={props.email}
           />
           <Divider />
-          <PasswordInput
-            onChangeText={props.handlePassword}
-            onFocus={props.handlePasswordFocus}
-            onBlur={props.handlePasswordBlur}
+          <Input
+            onChangeText={props.setPassword}
+            placeholder="Password"
             value={props.password}
           />
         </Form>
@@ -119,60 +111,19 @@ function LoginUI(props) {
 }
 
 /**
- * State
+ * Validation
  */
-const initialState = {
-  email: "Email",
-  password: "Password"
-};
-const validationSpec = {
-  email: [
-    [a => a !== "", "Must have email."],
-    [a => a !== initialState.email, "Must have email."]
-  ],
-  password: [
-    [a => a !== "", "Must have password."],
-    [a => a !== initialState.password, "Must have password."]
-  ]
-};
-class LoginComponent extends React.Component {
-  state = initialState;
-
-  handleEmail = email => {
-    this.setState(() => ({ email }));
-  };
-
-  handleEmailFocus = () => {
-    if (this.state.email === initialState.email) {
-      this.setState(() => ({ email: "" }));
-    }
-  };
-
-  handleEmailBlur = () => {
-    if (this.state.email === "") {
-      this.setState(() => ({ email: initialState.email }));
-    }
-  };
-
-  handlePassword = password => {
-    this.setState(() => ({ password }));
-  };
-
-  handlePasswordFocus = () => {
-    if (this.state.password === initialState.password) {
-      this.setState(() => ({ password: "" }));
-    }
-  };
-
-  handlePasswordBlur = () => {
-    if (this.state.password === "") {
-      this.setState(() => ({ password: initialState.password }));
-    }
-  };
-
-  handleComplete = () => {
+function handleComplete({ email, password, dispatch }) {
+  return () => {
     const errors = [];
-    const status = spected(validationSpec, this.state);
+
+    const status = spected(
+      {
+        email: [[a => a !== "", "Must have email."]],
+        password: [[a => a !== "", "Must have password."]]
+      },
+      { email, password }
+    );
 
     for (const key in status) {
       if (typeof status[key] !== "boolean") {
@@ -183,44 +134,38 @@ class LoginComponent extends React.Component {
     if (errors.length > 0) {
       alert(uniq(errors).join(" "));
     } else {
-      const { email, password } = this.state;
-      this.props.dispatch(LoginRequest(email, password));
+      dispatch(LoginRequest(email, password));
     }
   };
+}
 
-  componentWillReceiveProps({ token }) {
-    if (token && !this.props.token) {
-      alert("Login complete.");
-      this.setState(() => ({ triggerLink: true }));
-    }
-  }
-
-  render() {
-    return (
-      <FlexContainer>
-        <LoginUI
-          {...this.state}
-          handleEmail={this.handleEmail}
-          handleEmailFocus={this.handleEmailFocus}
-          handleEmailBlur={this.handleEmailBlur}
-          handlePassword={this.handlePassword}
-          handlePasswordFocus={this.handlePasswordFocus}
-          handlePasswordBlur={this.handlePasswordBlur}
-          handleComplete={this.handleComplete}
-        />
-        <TriggerLink to="home" trigger={this.state.triggerLink} />
-      </FlexContainer>
-    );
+/**
+ * Lifecycles
+ */
+function componentWillReceiveProps({ token, navigation }) {
+  if (token) {
+    navigation.navigate("home");
   }
 }
 
 /**
- * Redux
+ * Props and state
  */
-function mapState(state) {
-  return {
-    token: state.User.token
-  };
+function mapState({ User }) {
+  return { token: User.token };
 }
 
-export default connect(mapState, dispatch => ({ dispatch }))(LoginComponent);
+function mapDispatch(dispatch) {
+  return { dispatch };
+}
+
+export default withNavigation(
+  connect(mapState, mapDispatch)(
+    compose(
+      withState("email", "setEmail", ""),
+      withState("password", "setPassword", ""),
+      withHandlers({ handleComplete }),
+      lifecycle({ componentWillReceiveProps })
+    )(LoginUI)
+  )
+);
