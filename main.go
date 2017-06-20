@@ -4,19 +4,22 @@ import (
 	"boilerplate/server/delivery"
 	"boilerplate/server/infrastructure"
 
-	"github.com/bahlo/goat"
+	"net/http"
 )
 
 // StartApplication - TODO
 func StartApplication() error {
-	router := goat.New()
 	port := infrastructure.Environment("PORT", "5000")
 
-	router.Get("/", "/", delivery.Static)
-	router.Post("/user/create", "/user/create", delivery.CreateUser)
-	router.Post("/user/signin", "/user/signin", delivery.SignIn)
+	// API routes.
+	http.HandleFunc("/api/test", delivery.Static)
+	http.HandleFunc("/api/user/create", delivery.CreateUser)
+	http.HandleFunc("/api/user/signin", delivery.SignIn)
 
-	return router.Run(":" + port)
+	// Static routes.
+	http.Handle("/", http.FileServer(http.Dir("./client/build")))
+
+	return http.ListenAndServe(":"+port, nil)
 }
 
 func main() {

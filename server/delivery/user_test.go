@@ -11,16 +11,13 @@ import (
 	"strconv"
 	"testing"
 	"time"
-
-	"github.com/bahlo/goat"
 )
 
 func TestCreateUserSignIn(t *testing.T) {
 	go func() {
-		router := goat.New()
-		router.Post("/user/create", "/user/create", CreateUser)
-		router.Post("/user/signin", "/user/signin", SignIn)
-		routerErr := router.Run(":5002")
+		http.HandleFunc("/api/user/create", CreateUser)
+		http.HandleFunc("/api/user/signin", SignIn)
+		routerErr := http.ListenAndServe(":5002", nil)
 		if routerErr != nil {
 			t.Error(routerErr)
 			return
@@ -45,7 +42,7 @@ func TestCreateUserSignIn(t *testing.T) {
 	formData.Set("password", aPassword)
 
 	client := &http.Client{}
-	req, reqErr := http.NewRequest("POST", "http://127.0.0.1:5002/user/create", bytes.NewBufferString(formData.Encode()))
+	req, reqErr := http.NewRequest("POST", "http://127.0.0.1:5002/api/user/create", bytes.NewBufferString(formData.Encode()))
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	req.Header.Add("Content-Length", strconv.Itoa(len(formData.Encode())))
 	if reqErr != nil {
@@ -101,7 +98,7 @@ func TestCreateUserSignIn(t *testing.T) {
 	signInFormData.Set("password", aPassword)
 
 	signInClient := &http.Client{}
-	signInReq, signInReqErr := http.NewRequest("POST", "http://127.0.0.1:5002/user/signin", bytes.NewBufferString(signInFormData.Encode()))
+	signInReq, signInReqErr := http.NewRequest("POST", "http://127.0.0.1:5002/api/user/signin", bytes.NewBufferString(signInFormData.Encode()))
 	signInReq.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	signInReq.Header.Add("Content-Length", strconv.Itoa(len(signInFormData.Encode())))
 	if signInReqErr != nil {

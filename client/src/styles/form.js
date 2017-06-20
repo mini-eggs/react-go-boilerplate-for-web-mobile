@@ -1,9 +1,5 @@
 import Styled from "styled-components/native";
 
-export const FlexContainer = Styled.View`
-  flex: 1;
-`;
-
 export const Container = Styled.View`
   flex: 1;
   background-color: #e8702a;

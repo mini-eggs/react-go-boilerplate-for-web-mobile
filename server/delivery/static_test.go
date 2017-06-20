@@ -6,15 +6,12 @@ import (
 	"net/http"
 	"testing"
 	"time"
-
-	"github.com/bahlo/goat"
 )
 
 func TestStatic(t *testing.T) {
 	go func() {
-		router := goat.New()
-		router.Get("/", "/", Static)
-		routerErr := router.Run(":5001")
+		http.HandleFunc("/api/test", Static)
+		routerErr := http.ListenAndServe(":5001", nil)
 		if routerErr != nil {
 			t.Error(routerErr)
 			return
@@ -23,7 +20,7 @@ func TestStatic(t *testing.T) {
 
 	time.Sleep(1000)
 
-	resp, getErr := http.Get("http://127.0.0.1:5001/")
+	resp, getErr := http.Get("http://127.0.0.1:5001/api/test")
 	if getErr != nil {
 		t.Error(getErr)
 		return

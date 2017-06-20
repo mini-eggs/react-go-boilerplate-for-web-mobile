@@ -2,12 +2,10 @@ package delivery
 
 import (
 	"net/http"
-
-	"github.com/bahlo/goat"
 )
 
 // Static - TODO
-func Static(w http.ResponseWriter, r *http.Request, p goat.Params) {
+func Static(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	successMessage(w, "Not found")
 }

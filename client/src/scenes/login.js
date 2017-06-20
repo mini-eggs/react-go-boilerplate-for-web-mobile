@@ -1,14 +1,12 @@
 import React from "react";
 import { View, StatusBar } from "react-native";
 import { connect } from "react-redux";
-import Styled from "styled-components/native";
 import spected from "spected";
 import { uniq } from "lodash";
 import { compose, withHandlers, withState, lifecycle } from "recompose";
 import { LoginRequest } from "../reducers/user";
 import withNavigation from "../components/withNavigation";
 import {
-  FlexContainer,
   Container,
   Inner,
   Title,

@@ -10,7 +10,7 @@ import (
 )
 
 // SignIn - TODO
-func SignIn(w http.ResponseWriter, r *http.Request, p goat.Params) {
+func SignIn(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	var (
@@ -54,7 +54,7 @@ func SignIn(w http.ResponseWriter, r *http.Request, p goat.Params) {
 }
 
 // CreateUser - TODO
-func CreateUser(w http.ResponseWriter, r *http.Request, p goat.Params) {
+func CreateUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	var (
