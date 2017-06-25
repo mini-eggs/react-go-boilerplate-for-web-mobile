@@ -9,6 +9,7 @@ const styles = `
     width: 100%;
     height: 50px;
     background-color: lightblue;
+    z-index: 99;
   }
 
   .app-header .header-wrap {

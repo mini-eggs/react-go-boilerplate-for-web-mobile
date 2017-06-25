@@ -13,7 +13,7 @@ class AppContainer extends Component {
           flex-direction: column;
         }
       </style>
-      <div>
+      <div class="app-container">
         <slot></slot>
       </div>
     `;
