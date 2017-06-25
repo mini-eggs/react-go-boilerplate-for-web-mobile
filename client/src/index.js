@@ -1,6 +1,4 @@
-import React from "react";
-import App from "./app";
-
-export default function() {
-  return <App />;
-}
+import "skatejs-web-components";
+import "./styles/main.css";
+import Router from "./router";
+Router.resolve();

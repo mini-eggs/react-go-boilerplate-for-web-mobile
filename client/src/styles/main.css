@@ -1,0 +1,34 @@
+html {
+  /*background-color: #f1f1f1;*/
+}
+
+body {
+  margin: 0;
+  font-family: sans-serif;
+}
+
+* {
+  transition-duration: 250ms;
+  outline: none !important;
+}
+
+button {
+  border-width: 0;
+}
+
+.hover-state {
+  position: relative;
+}
+.hover-state:before {
+  content: " ";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0);
+  transition-duration: 250ms;
+}
+.hover-state:hover:before {
+  background-color: rgba(255, 255, 255, 0.25);
+}
