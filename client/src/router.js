@@ -13,3 +13,7 @@ router.on({
 });
 
 export default router;
+
+export function Navigate(location) {
+  return () => router.navigate(location);
+}

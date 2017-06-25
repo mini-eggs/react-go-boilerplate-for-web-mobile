@@ -1,21 +1,20 @@
-const mock = {
-  addEventListener: () => {},
-  removeEventListener: () => {}
-};
+import { Component as SkateComponent, h } from "skatejs";
+const React = { createElement: h };
 
-export class Component extends HTMLElement {
-  constructor() {
-    super();
-    this.shadow = this.attachShadow({ mode: "open" });
+export class Component extends SkateComponent {
+  renderCallback() {
+    return (
+      <div>
+        <style>
+          {this.styles()}
+        </style>
+        {this.render()}
+      </div>
+    );
   }
 
-  find(selector) {
-    const el = this.shadow.querySelector(selector);
-    return el || mock;
-  }
-
-  findAll(selector) {
-    const el = this.shadow.querySelectorAll(selector);
-    return el || [mock];
+  styles() {
+    return `
+    `;
   }
 }

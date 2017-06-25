@@ -1,19 +1,20 @@
+import { h } from "skatejs";
 import { Component } from "../lib";
+const React = { createElement: h };
 
 class Details extends Component {
-  connectedCallback() {
-    this.shadowRoot.innerHTML = `
-      <style>
-        div {
-          display: flex;
-          flex: 1;
-          justify-content: center;
-          align-items: center;
-        }
-      </style>
-      <div>
-        <h1>wow!</h1>
-      </div>
+  render() {
+    return <h1>wow!</h1>;
+  }
+
+  styles() {
+    return `
+      :host {
+        display: flex;
+        flex: 1;
+        justify-content: center;
+        align-items: center;
+      }
     `;
   }
 }

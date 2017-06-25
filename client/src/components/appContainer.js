@@ -1,22 +1,15 @@
-import { Component } from "../lib";
+import { Component, h } from "skatejs";
+import Styles from "./appContainer.styles";
+const React = { createElement: h };
 
 class AppContainer extends Component {
-  connectedCallback() {
-    this.shadowRoot.innerHTML = `
-      <style>
-        div {
-          min-height: 100vh;
-          display: flex;
-          flex: 1;
-          justify-content: center;
-          align-items: stretch;
-          flex-direction: column;
-        }
-      </style>
-      <div class="app-container">
-        <slot></slot>
+  renderCallback() {
+    return (
+      <div>
+        <style>{Styles}</style>
+        <slot />
       </div>
-    `;
+    );
   }
 }
 
