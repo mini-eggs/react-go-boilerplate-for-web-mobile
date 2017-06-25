@@ -1,20 +1,9 @@
-body {
-  margin: 0;
-  font-family: sans-serif;
-}
-
-* {
-  outline: none !important;
-}
-
-button {
-  border-width: 0;
-}
-
-::shadow .hover-state {
+div {
   position: relative;
+  transition-duration: 250ms;
+  cursor: pointer;
 }
-::shadow .hover-state:before {
+div:after {
   content: " ";
   position: absolute;
   top: 0;
@@ -24,6 +13,9 @@ button {
   background-color: rgba(255, 255, 255, 0);
   transition-duration: 250ms;
 }
-::shadow .hover-state:hover:before {
+div:hover:after {
   background-color: rgba(255, 255, 255, 0.25);
+}
+div:active {
+  transform: scale(0.99);
 }

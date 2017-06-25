@@ -1,6 +1,6 @@
+/** @jsx h */
 import { h } from "skatejs";
-import { Component } from "../lib";
-const React = { createElement: h };
+import { Component } from "../lib/";
 
 class Details extends Component {
   render() {

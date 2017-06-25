@@ -1,10 +1,7 @@
 import Navigo from "navigo";
 
 const router = new Navigo("/", true, "#");
-
-async function initializeRoute(aModule) {
-  (await aModule).default();
-}
+const initializeRoute = async aModule => (await aModule).default();
 
 router.on({
   about: () => initializeRoute(import("./scenes/about")),
@@ -12,7 +9,9 @@ router.on({
   "*": () => initializeRoute(import("./scenes/home"))
 });
 
-export default router;
+export function Start() {
+  router.resolve();
+}
 
 export function Navigate(location) {
   return () => router.navigate(location);

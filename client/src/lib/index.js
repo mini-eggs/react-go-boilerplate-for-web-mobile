@@ -1,7 +1,11 @@
+/** @jsx h */
 import { Component as SkateComponent, h } from "skatejs";
-const React = { createElement: h };
 
 export class Component extends SkateComponent {
+  styles() {
+    return "";
+  }
+
   renderCallback() {
     return (
       <div>
@@ -11,10 +15,5 @@ export class Component extends SkateComponent {
         {this.render()}
       </div>
     );
-  }
-
-  styles() {
-    return `
-    `;
   }
 }

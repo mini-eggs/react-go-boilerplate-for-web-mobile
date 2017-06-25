@@ -1,11 +1,13 @@
-import { Component, h } from "skatejs";
+/** @jsx h */
+import { h } from "skatejs";
+import { Component } from "../lib/";
 import CameraSVG from "../assets/camera.svg";
-import Styles from "./choosePhoto.styles.js";
 import("./loader");
 import("./touchable");
-const React = { createElement: h };
 
 class ChoosePhoto extends Component {
+  styles = () => require("./choosePhoto.css").toString();
+
   static get props() {
     return {
       image: null,
@@ -13,12 +15,15 @@ class ChoosePhoto extends Component {
     };
   }
 
+  /**
+   * Methods.
+   */
+
   _close = () => {
     this.image = null;
   };
 
   _submit = () => {
-    console.log(1);
     this.loading = true;
     setTimeout(() => {
       this.loading = false;
@@ -26,15 +31,22 @@ class ChoosePhoto extends Component {
     }, 2000);
   };
 
-  renderCallback() {
-    return (
-      <div class="choose-photo">
-        <style>{Styles}</style>
-        {this.loading
-          ? this._renderLoading()
-          : this.image ? this._renderPreview() : this._renderPicker()}
-      </div>
-    );
+  _onChange = aEvent => {
+    const file = aEvent.target.files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = mEvent => {
+      this.image = mEvent.target.result;
+    };
+  };
+
+  /**
+   * Render.
+   */
+
+  render() {
+    if (this.loading) return this._renderLoading();
+    return this.image ? this._renderPreview() : this._renderPicker();
   }
 
   _renderPicker = () => {
@@ -73,15 +85,6 @@ class ChoosePhoto extends Component {
         <app-loader />
       </div>
     );
-  };
-
-  _onChange = aEvent => {
-    const file = aEvent.target.files[0];
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = mEvent => {
-      this.image = mEvent.target.result;
-    };
   };
 }
 

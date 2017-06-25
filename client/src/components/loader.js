@@ -1,16 +1,13 @@
-import { Component, h } from "skatejs";
-import Styles from "./loader.styles";
+/** @jsx h */
+import { h } from "skatejs";
+import { Component } from "../lib/";
 import LoadingGIF from "../assets/loading.gif";
-const React = { createElement: h };
 
 class Loader extends Component {
-  renderCallback() {
-    return (
-      <div>
-        <style>{Styles}</style>
-        <img alt="Loading icon" src={LoadingGIF} />
-      </div>
-    );
+  styles = () => require("./loader.css").toString();
+
+  render() {
+    return <img alt="Loading icon" src={LoadingGIF} />;
   }
 }
 

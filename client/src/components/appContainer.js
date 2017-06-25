@@ -1,16 +1,10 @@
-import { Component, h } from "skatejs";
-import Styles from "./appContainer.styles";
-const React = { createElement: h };
+/** @jsx h */
+import { h } from "skatejs";
+import { Component } from "../lib";
 
 class AppContainer extends Component {
-  renderCallback() {
-    return (
-      <div>
-        <style>{Styles}</style>
-        <slot />
-      </div>
-    );
-  }
+  styles = () => require("./appContainer.css").toString();
+  render = () => <slot />;
 }
 
 customElements.define("app-container", AppContainer);
