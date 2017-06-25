@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "navigo": "^5.2.0",
+    "preact": "^8.1.0",
+    "skatejs": "^5.0.0-alpha.10",
     "skatejs-web-components": "0.0.1"
   },
   "devDependencies": {
