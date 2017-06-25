@@ -5,6 +5,8 @@ import("./touchable");
 const React = { createElement: h };
 
 class AppHeader extends Component {
+  styles = () => require("./header.css").toString();
+
   _leftNav() {
     return (
       <app-touchable onClick={Navigate("/")} style="display: inline-block;">
@@ -50,58 +52,6 @@ class AppHeader extends Component {
         {this._rightNav()}
       </div>
     );
-  }
-
-  styles() {
-    return `
-      :host {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 50px;
-        background-color: lightblue;
-        z-index: 99;
-      }
-
-      .header-wrap {
-        margin: 0 auto;
-        max-width: 1000px;
-      }
-
-      .header-brand {
-        float: left;
-        padding: 0 15px;
-        cursor: pointer;
-      }
-
-      .header-brand span {
-        font-size: 24px;
-        color: white;
-        line-height: 50px;
-      }
-
-      .header-links {
-        float: right;
-      }
-
-      .header-links div {
-        display: inline-block;
-        padding: 0 15px;
-        cursor: pointer;
-      }
-
-      .header-links div span {
-        line-height: 50px;
-        color: white;
-      }
-
-      @media (max-width: 748px) {
-        .header-links {
-          display: none;
-        }
-      }
-    `;
   }
 }
 
